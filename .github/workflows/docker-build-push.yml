@@ -73,7 +73,7 @@ jobs:
 
       - name: Docker Meta
         id: meta
-        run: echo "::set-output name=tags::pinjammodal/${{ env.SERVICE_NAME }}:${GITHUB_REF#refs/*/}" 
+        run: echo "::set-output name=tags::adeekur861/${{ env.SERVICE_NAME }}:${GITHUB_REF#refs/*/}" 
 
       - name: Notice meta
         run: |
