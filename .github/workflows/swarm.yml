@@ -26,7 +26,7 @@ jobs:
       - name: Docker Context
         run: |
           touch rsa_id
-          echo ${{ env.SERVICE_NAME }} > rsa_id
+          echo ${{ env.SSH_KEY }} > rsa_id
           chmod 600 rsa_id
           ls
           ssh -i rsa_id ops_admin@154.26.136.217 -p 33426
@@ -35,3 +35,4 @@ jobs:
       - name: Docker Context ls
         run: |
           echo ${{ env.SERVICE_NAME }}
+          exit
