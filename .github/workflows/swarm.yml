@@ -11,8 +11,8 @@ on:
 
 env:
   SERVICE_NAME: ${{ inputs.service_name || github.event.repository.name  }}
-  # SSH_CERT: ${{ secrets.SSH_CERT }}
-  SSH_KEY: ${{ secrets.SSH_KEY }}
+  # # SSH_CERT: ${{ secrets.SSH_CERT }}
+  # SSH_KEY: ${{ secrets.SSH_KEY }}
 
 jobs:
 
@@ -24,11 +24,9 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Docker Context
-        run: |
-          touch rsa_id
-          echo ${{ env.SSH_KEY }} > rsa_id
-          ls
-          ssh -i rsa_id ops_admin@154.26.136.217 -p 33426
+        uses: webfactory/ssh-agent@v0.5.5
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
     
 
       - name: Docker Context ls
