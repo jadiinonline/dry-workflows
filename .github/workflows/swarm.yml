@@ -22,6 +22,11 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
+      
+      - name: Install SSH Client
+        run: |
+          sudo apt-get update
+          sudo apt-get install openssh-client
 
       - name: Docker Context
         env:
