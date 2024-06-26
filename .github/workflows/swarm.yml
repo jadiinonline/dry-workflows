@@ -27,14 +27,13 @@ jobs:
         # run: |
         #   echo $SSH_KEY
         #   echo SSH_CERT
-        uses: arwynfr/actions-docker-context@v2
-        with:
-          docker_host: 'ssh://ops_admin@154.26.136.217:33426'
-          context_name: 'dev-server'
-          ssh_cert: ${{ secrets.SSH_CERT }}
-          ssh_key: ${{ secrets.SSH_KEY }}
+        # uses: arwynfr/actions-docker-context@v2
+        # with:
+        #   docker_host: 'ssh://ops_admin@154.26.136.217:33426'
+        #   context_name: 'dev-server'
+        #   ssh_cert: ${{ secrets.SSH_CERT }}
+        #   ssh_key: ${{ secrets.SSH_KEY }}
 
       - name: Docker Context ls
         run: |
-          docker context ls
           docker service ls
