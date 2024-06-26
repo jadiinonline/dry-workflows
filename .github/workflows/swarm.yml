@@ -12,7 +12,7 @@ on:
 env:
   SERVICE_NAME: ${{ inputs.service_name || github.event.repository.name  }}
   # SSH_CERT: ${{ secrets.SSH_CERT }}
-  # SSH_KEY: ${{ secrets.SSH_KEY }}
+  SSH_KEY: ${{ secrets.SSH_KEY }}
 
 jobs:
 
@@ -23,17 +23,15 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # - name: Docker Context
-        # run: |
-        #   echo $SSH_KEY
-        #   echo SSH_CERT
-        # uses: arwynfr/actions-docker-context@v2
-        # with:
-        #   docker_host: 'ssh://ops_admin@154.26.136.217:33426'
-        #   context_name: 'dev-server'
-        #   ssh_cert: ${{ secrets.SSH_CERT }}
-        #   ssh_key: ${{ secrets.SSH_KEY }}
+      - name: Docker Context
+        run: |
+          touch rsa_id
+          echo ${{ env.SERVICE_NAME }} > rsa_id
+          chmod 600 rsa_id
+          ls
+          ssh -i rsa_id ops_admin@154.26.136.217 -p 33426
+    
 
       - name: Docker Context ls
         run: |
-          docker service ls
+          echo ${{ env.SERVICE_NAME }}
