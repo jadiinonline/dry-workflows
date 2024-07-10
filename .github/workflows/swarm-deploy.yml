@@ -137,7 +137,7 @@ jobs:
             echo "SERVICE=$(docker service ls | grep -c ${{ env.SERVICE_NAME }}[[:space:]])" >> $GITHUB_ENV
             echo "MAX_REPLICA=${{ needs.define.outputs.maxReplica }}" >> $GITHUB_ENV
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         if: env.SERVICE == 0
         with:
           node-version: '12'
