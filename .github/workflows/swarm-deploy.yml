@@ -111,7 +111,7 @@ jobs:
     steps:
       - name: Docker Meta
         id: meta
-        run: echo "tags=pinjammodal/${{ env.SERVICE_NAME }}:${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT 
+        run: echo "tags=adeekur861/${{ env.SERVICE_NAME }}:${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT 
 
       - name: Notice Meta
         run: echo "::notice title=meta tag created::${{ steps.meta.outputs.tags }}"
