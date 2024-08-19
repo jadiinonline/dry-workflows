@@ -30,31 +30,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Set manifest deployment
-        id: manifest
-        run: |
-          cd .github/deployment/templates/
-          if ${{endsWith(github.event.ref, 'prod')}}
-          then
-            manifest=$(cat production.yml)
-            echo "::set-output name=base_image::$(echo "$manifest" | yq eval '.base_image' -)"
-            echo "::set-output name=target_port::$(echo "$manifest" | yq eval '.target_port' -)"
-          elif ${{endsWith(github.event.ref, 'dev')}}
-          then
-            manifest=$(cat development.yml)
-            echo "::set-output name=base_image::$(echo "$manifest" | yq eval '.base_image' -)"
-            echo "::set-output name=target_port::$(echo "$manifest" | yq eval '.target_port' -)"
-          elif ${{endsWith(github.event.ref, 'staging')}}
-          then
-            manifest=$(cat staging.yml)
-            echo "::set-output name=base_image::$(echo "$manifest" | yq eval '.base_image' -)"
-            echo "::set-output name=target_port::$(echo "$manifest" | yq eval '.target_port' -)"
-          else
-            manifest=$(cat release.yml)
-            echo "::set-output name=base_image::$(echo "$manifest" | yq eval '.base_image' -)"
-            echo "::set-output name=target_port::$(echo "$manifest" | yq eval '.target_port' -)"
-          fi
-        
       - name: define build command env
         id: build_command
         run: |
@@ -98,8 +73,6 @@ jobs:
           outputs: type=docker
           tags: ${{ steps.meta.outputs.tags }}
           build-args: |
-            BASE_IMAGE=${{ steps.manifest.outputs.base_image }}
-            TARGET_PORT=${{ steps.manifest.outputs.target_port}}
             FE_BUILD_ENV=${{ steps.build_command.outputs.command }}
 
       - name: Check Build Result
