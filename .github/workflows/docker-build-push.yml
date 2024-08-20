@@ -23,8 +23,6 @@ jobs:
 
     outputs:
       imageTag: ${{ steps.meta.outputs.tags }}
-      baseImage: ${{ steps.manifest.outputs.base_image }}
-      targetPort: ${{ steps.manifest.outputs.target_port }}
 
     steps:
       - name: Checkout Repository
@@ -53,8 +51,6 @@ jobs:
       - name: Notice meta
         run: |
           echo "::notice title=meta tag created::${{ steps.meta.outputs.tags }}"
-          echo "::notice title=manifest base_image created::${{ steps.manifest.outputs.base_image }}"
-          echo "::notice title=manifest target_port created::${{ steps.manifest.outputs.target_port }}"
 
 
       - name: Set Context Default
