@@ -149,10 +149,13 @@ jobs:
           kubectl apply -f ../argocd-application/${{ env.SERVICE_NAME }}.yml
           
       
-      - name: Update current service
-        if: ((env.SERVICE == 1) && (env.MAX_REPLICA == 'null'))
-        run: docker service update --health-retries 3 --health-interval 5s --limit-cpu 1.0 --limit-memory 2048M --with-registry-auth --image ${{ needs.metadata.outputs.imageTag }} ${{ env.SERVICE_NAME }}
-      
+      - name: Update current deployment
+        if: ((env.SERVICE == 1))
+        run: 
+          cd ~/argocd-manifest
+          git checkout dev
+          sed -i "s/{{TAG_RELEASE}}/${{ steps.meta.outputs.tags }}"/g" ${{ env.SERVICE_NAME }}/deployment.yml
+          
       - name: Restore Docker Context To Default
         if: always()
         run: docker context use default
