@@ -155,7 +155,11 @@ jobs:
           cd ~/argocd-manifest
           git checkout dev
           sed -i "s/{{TAG_RELEASE}}/${{ steps.meta.outputs.tags }}"/g" ${{ env.SERVICE_NAME }}/deployment.yml
+          git add .
+          git commit -m "update image tag ${{ steps.meta.outputs.tags }}"
+          git push origin dev
+          rm -rf argocd-manifest
           
       - name: Restore Docker Context To Default
         if: always()
-        run: docker context use default
+        run: kubectl config use-context default
