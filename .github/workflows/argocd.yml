@@ -126,11 +126,11 @@ jobs:
       - name: Set Context
         run: kubectl config use-context ${{ needs.define.outputs.clusterContext }}
 
-      - name: Check stack
+      - name: Check Deployment
         run: |
             echo "DEPLOYMENT=$(kubectl get deploy -n  | grep -c ${{ env.SERVICE_NAME }}[[:space:]])" >> $GITHUB_ENV
 
-      - name: Stack deploy
+      - name: deploy to cluster
         if: ((env.DEPLOYMENT == 0))
         run: | 
           git clone https://adekurniawann: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@github.com/jadiinonline/argocd-manifest.git
@@ -160,6 +160,6 @@ jobs:
           git push origin dev
           rm -rf argocd-manifest
           
-      - name: Restore Docker Context To Default
+      - name: Restore kubectl Context To Default
         if: always()
         run: kubectl config use-context default
