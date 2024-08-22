@@ -130,35 +130,36 @@ jobs:
         run: |
             echo "DEPLOYMENT=$(kubectl get deploy -n  | grep -c ${{ env.SERVICE_NAME }}[[:space:]])" >> $GITHUB_ENV
 
-      - name: deploy to cluster
-        if: ((env.DEPLOYMENT == 0))
-        run: | 
-          git clone https://adekurniawann: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@github.com/jadiinonline/argocd-manifest.git
-          cd argocd-manifest
-          git checkout dev
-          cd argocd-application
-          cp template.yml ${{ env.SERVICE_NAME }}.yml
-          sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" ${{ env.SERVICE_NAME }}.yml
-          sed -i "s/{{NAMESPACES}}/${{ needs.define.outputs.Namespace }}/g" ${{ env.SERVICE_NAME }}.yml
-          sed -i "s/{{BRANCH}}/dev/g" ${{ env.SERVICE_NAME }}.yml
-          cp -r ../deployment-template ../${{ env.SERVICE_NAME }}
-          cd ../${{ env.SERVICE_NAME }}
-          sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" deployment.yml
-          sed -i "s/{{TAG_RELEASE}}/${{ steps.meta.outputs.tags }}"/g" deployment.yml
-          sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" service.yml
-          kubectl apply -f ../argocd-application/${{ env.SERVICE_NAME }}.yml
+      # - name: deploy to cluster
+      #   if: ((env.DEPLOYMENT == 0))
+      #   run: | 
+      #     git clone https://adekurniawann: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@github.com/jadiinonline/argocd-manifest.git
+      #     cd argocd-manifest
+      #     git checkout dev
+      #     cd argocd-application
+      #     cp template.yml ${{ env.SERVICE_NAME }}.yml
+      #     sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" ${{ env.SERVICE_NAME }}.yml
+      #     sed -i "s/{{NAMESPACES}}/${{ needs.define.outputs.Namespace }}/g" ${{ env.SERVICE_NAME }}.yml
+      #     sed -i "s/{{BRANCH}}/dev/g" ${{ env.SERVICE_NAME }}.yml
+      #     cp -r ../deployment-template ../${{ env.SERVICE_NAME }}
+      #     cd ../${{ env.SERVICE_NAME }}
+      #     sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" deployment.yml
+      #     sed -i "s/{{TAG_RELEASE}}/${{ steps.meta.outputs.tags }}"/g" deployment.yml
+      #     sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" service.yml
+      #     kubectl apply -f ../argocd-application/${{ env.SERVICE_NAME }}.yml
           
       
       - name: Update current deployment
         if: ((env.SERVICE == 1))
-        run: 
-          cd ~/argocd-manifest
+        run:
+          git clone https://adekurniawann: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@github.com/jadiinonline/argocd-manifest.git
+          cd argocd-manifest
           git checkout dev
           sed -i "s/{{TAG_RELEASE}}/${{ steps.meta.outputs.tags }}"/g" ${{ env.SERVICE_NAME }}/deployment.yml
           git add .
           git commit -m "update image tag ${{ steps.meta.outputs.tags }}"
           git push origin dev
-          rm -rf argocd-manifest
+          # rm -rf argocd-manifest
           
       - name: Restore kubectl Context To Default
         if: always()
