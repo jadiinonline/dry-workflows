@@ -166,6 +166,8 @@ jobs:
       - name: Update current deployment
         if: env.DEPLOYMENT == 1
         run: |
+          git config --global user.email "adekurniawann"
+          git config --global user.name "adeekur861@gmail.com"
           git checkout dev
           ls -la
           pwd
