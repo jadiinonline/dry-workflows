@@ -128,7 +128,7 @@ jobs:
 
       - name: Check Deployment
         run: |
-            echo "DEPLOYMENT=$(kubectl get deploy -n  | grep -c ${{ env.SERVICE_NAME }}[[:space:]])" >> $GITHUB_ENV
+            echo "DEPLOYMENT=$(kubectl get deploy -n ${{ needs.define.outputs.Namespace }} | grep -c ${{ env.SERVICE_NAME }}[[:space:]])" >> $GITHUB_ENV
 
       # - name: deploy to cluster
       #   if: ((env.DEPLOYMENT == 0))
@@ -163,4 +163,4 @@ jobs:
           
       - name: Restore kubectl Context To Default
         if: always()
-        run: kubectl config use-context default
+        run: sudo kubectl config use-context default
