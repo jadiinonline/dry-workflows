@@ -12,6 +12,8 @@ on:
         required: true
       cr_token:
         required: true
+      pat_token:
+        required: true
 
 env:
   SERVICE_NAME: ${{ inputs.service_name || github.event.repository.name  }}
@@ -140,7 +142,7 @@ jobs:
         with:
           repository: jadiinonline/argocd-manifest
           ref: "dev"
-          token: ${{ secrets.PAT_TOKEN }}
+          token: ${{ secrets.pat_token }}
           
       # - name: deploy to cluster
       #   if: ((env.DEPLOYMENT == 0))
