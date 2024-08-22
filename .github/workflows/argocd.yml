@@ -135,6 +135,13 @@ jobs:
         with:
           node-version: '12'
           
+      - name: Checkout Private Repository
+        uses: actions/checkout@v4
+        with:
+          repository: jadiinonline/argocd-manifest
+          ref: "dev"
+          token: ${{ secrets.PAT_TOKEN }}
+          
       # - name: deploy to cluster
       #   if: ((env.DEPLOYMENT == 0))
       #   run: | 
@@ -157,8 +164,6 @@ jobs:
       - name: Update current deployment
         if: env.DEPLOYMENT == 1
         run: |
-          git clone https://adekurniawann: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@github.com/jadiinonline/argocd-manifest.git
-          cd argocd-manifest
           git checkout dev
           sed -i "s/{{TAG_RELEASE}}/${{ steps.meta.outputs.tags }}"/g" ${{ env.SERVICE_NAME }}/deployment.yml
           git add .
