@@ -129,6 +129,7 @@ jobs:
       - name: Check Deployment
         run: |
             echo "DEPLOYMENT=$(kubectl get deploy -n ${{ needs.define.outputs.Namespace }} | grep -c ${{ env.SERVICE_NAME }}[[:space:]])" >> $GITHUB_ENV
+            echo "DEPLOYMENT: env.DEPLOYMENT"
 
       # - name: deploy to cluster
       #   if: ((env.DEPLOYMENT == 0))
