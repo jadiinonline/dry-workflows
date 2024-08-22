@@ -129,8 +129,12 @@ jobs:
       - name: Check Deployment
         run: |
             echo "DEPLOYMENT=$(kubectl get deploy -n ${{ needs.define.outputs.Namespace }} | grep -c ${{ env.SERVICE_NAME }}[[:space:]])" >> $GITHUB_ENV
-            echo "DEPLOYMENT: env.DEPLOYMENT"
 
+      - uses: actions/setup-node@v3
+        if: env.SERVICE == 0
+        with:
+          node-version: '12'
+          
       # - name: deploy to cluster
       #   if: ((env.DEPLOYMENT == 0))
       #   run: | 
