@@ -150,7 +150,7 @@ jobs:
           
       
       - name: Update current deployment
-        if: ((env.SERVICE == 1))
+        if: ((env.DEPLOYMENT == 1))
         run:
           git clone https://adekurniawann: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@github.com/jadiinonline/argocd-manifest.git
           cd argocd-manifest
