@@ -167,6 +167,8 @@ jobs:
         if: env.DEPLOYMENT == 1
         run: |
           git checkout dev
+          ls -la
+          pwd
           sed -i "s/{{TAG_RELEASE}}/${{ steps.meta.outputs.tags }}/g" ${{ env.SERVICE_NAME }}/deployment.yml
           git add .
           git commit -m "update image tag ${{ steps.meta.outputs.tags }}"
