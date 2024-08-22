@@ -172,6 +172,8 @@ jobs:
           ls -la
           pwd
           sed -i "s/{{TAG_RELEASE}}/${{ steps.meta.outputs.tags }}/g" ${{ env.SERVICE_NAME }}/deployment.yaml
+          ls -la
+          cat nodejs-web-prototype/deployment.yaml
           git add -A
           git commit -m "update image tag ${{ steps.meta.outputs.tags }}"
           git push origin dev
