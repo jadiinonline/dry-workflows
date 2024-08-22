@@ -169,7 +169,7 @@ jobs:
           git checkout dev
           ls -la
           pwd
-          sed -i "s/{{TAG_RELEASE}}/${{ steps.meta.outputs.tags }}/g" ${{ env.SERVICE_NAME }}/deployment.yml
+          sed -i "s/{{TAG_RELEASE}}/${{ steps.meta.outputs.tags }}/g" ${{ env.SERVICE_NAME }}/deployment.yaml
           git add .
           git commit -m "update image tag ${{ steps.meta.outputs.tags }}"
           git push origin dev
