@@ -154,6 +154,7 @@ jobs:
           sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" ${{ env.SERVICE_NAME }}/deployment.yaml
           sed -i "s#image:.*#image: adeekur861/${{ env.SERVICE_NAME }}:${GITHUB_REF#refs/*/}#g" ${{ env.SERVICE_NAME }}/deployment.yaml
           sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" ${{ env.SERVICE_NAME }}/service.yaml
+          sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" ${{ env.SERVICE_NAME }}/hpa.yaml
           cp argocd-application/template.yaml argocd-application/${{ env.SERVICE_NAME }}.yaml
           sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" argocd-application/${{ env.SERVICE_NAME }}.yaml
           sed -i "s/{{NAMESPACES}}/${{ needs.define.outputs.Namespace }}/g" argocd-application/${{ env.SERVICE_NAME }}.yaml
