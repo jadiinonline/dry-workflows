@@ -174,7 +174,6 @@ jobs:
           git add -A
           git commit -m "update image tag ${{ steps.meta.outputs.tags }}"
           git push origin dev
-          # rm -rf argocd-manifest
           
       - name: Restore kubectl Context To Default
         if: always()
