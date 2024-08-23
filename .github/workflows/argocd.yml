@@ -149,7 +149,7 @@ jobs:
         run: |
           git config --global user.email "adekurniawann"
           git config --global user.name "adeekur861@gmail.com" 
-          git checkout $GITHUB_BASE_REF
+          git checkout ${{ needs.define.outputs.nodeEnv }}
           cp template.yml ${{ env.SERVICE_NAME }}.yml
           sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" ${{ env.SERVICE_NAME }}.yml
           sed -i "s/{{NAMESPACES}}/${{ needs.define.outputs.Namespace }}/g" ${{ env.SERVICE_NAME }}.yml
@@ -167,7 +167,7 @@ jobs:
         run: |
           git config --global user.email "adekurniawann"
           git config --global user.name "adeekur861@gmail.com"
-          git checkout $GITHUB_BASE_REF
+          git checkout ${{ needs.define.outputs.nodeEnv }}
           ls -la
           pwd
           sed -i "s#image:.*#image: adeekur861/${{ env.SERVICE_NAME }}:${GITHUB_REF#refs/*/}#g" ${{ env.SERVICE_NAME }}/deployment.yaml
