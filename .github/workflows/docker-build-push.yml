@@ -23,10 +23,42 @@ jobs:
 
     outputs:
       imageTag: ${{ steps.meta.outputs.tags }}
+      imageBuilder: ${{ steps.manifest.outputs.image_builders }}
+      targetPort: ${{ steps.manifest.outputs.target_port }}
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
+      
+      - name: Set manifest deployment
+        id: manifest
+        run: |
+          cd .github/deployment/templates/
+          if ${{endsWith(github.event.ref, 'prod')}}
+          then
+            manifest=$(cat production.yml)
+            echo "image_builders=$(echo "$manifest" | yq eval '.image_builder' -)" >> $GITHUB_OUTPUT
+            echo "target_port=$(echo "$manifest" | yq eval '.target_port' -)" >> $GITHUB_OUTPUT
+          elif ${{endsWith(github.event.ref, 'dev')}}
+          then
+            manifest=$(cat development.yml)
+            echo "image_builders=$(echo "$manifest" | yq eval '.image_builder' -)" >> $GITHUB_OUTPUT
+            echo "target_port=$(echo "$manifest" | yq eval '.target_port' -)" >> $GITHUB_OUTPUT
+          elif ${{endsWith(github.event.ref, 'staging')}}
+          then
+            manifest=$(cat staging.yml)
+            echo "image_builders=$(echo "$manifest" | yq eval '.image_builder' -)" >> $GITHUB_OUTPUT
+            echo "target_port=$(echo "$manifest" | yq eval '.target_port' -)" >> $GITHUB_OUTPUT
+          elif ${{endsWith(github.event.ref, 'ops')}}
+          then
+            manifest=$(cat operation.yml)
+            echo "image_builders=$(echo "$manifest" | yq eval '.image_builder' -)" >> $GITHUB_OUTPUT
+            echo "target_port=$(echo "$manifest" | yq eval '.target_port' -)" >> $GITHUB_OUTPUT
+          else
+            manifest=$(cat release.yml)
+            echo "image_builders=$(echo "$manifest" | yq eval '.image_builder' -)" >> $GITHUB_OUTPUT
+            echo "target_port=$(echo "$manifest" | yq eval '.target_port' -)" >> $GITHUB_OUTPUT
+          fi
 
       - name: define build command env
         id: build_command
@@ -51,6 +83,8 @@ jobs:
       - name: Notice meta
         run: |
           echo "::notice title=meta tag created::${{ steps.meta.outputs.tags }}"
+          echo "::notice title=manifest image_builder created::${{ steps.manifest.outputs.image_builders }}"
+          echo "::notice title=manifest target_port created::${{ steps.manifest.outputs.target_port }}"
 
 
       - name: Set Context Default
@@ -69,6 +103,8 @@ jobs:
           outputs: type=docker
           tags: ${{ steps.meta.outputs.tags }}
           build-args: |
+            IMAGE_BUILDER=${{ steps.manifest.outputs.image_builders }}
+            TARGET_PORT=${{ steps.manifest.outputs.target_port }}
             FE_BUILD_ENV=${{ steps.build_command.outputs.command }}
 
       - name: Check Build Result
