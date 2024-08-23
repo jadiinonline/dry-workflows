@@ -150,17 +150,15 @@ jobs:
           git config --global user.email "adekurniawann"
           git config --global user.name "adeekur861@gmail.com" 
           git checkout ${{ needs.define.outputs.nodeEnv }}
-          cp template.yml ${{ env.SERVICE_NAME }}.yml
-          sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" ${{ env.SERVICE_NAME }}.yml
-          sed -i "s/{{NAMESPACES}}/${{ needs.define.outputs.Namespace }}/g" ${{ env.SERVICE_NAME }}.yml
-          sed -i "s/{{BRANCH}}/dev/g" ${{ env.SERVICE_NAME }}.yml
-          cp -r ../deployment-template ../${{ env.SERVICE_NAME }}
-          cd ../${{ env.SERVICE_NAME }}
-          sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" deployment.yml
-          sed -i "s/{{TAG_RELEASE}}/${{ steps.meta.outputs.tags }}"/g" deployment.yml
-          sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" service.yml
-          kubectl apply -f ../argocd-application/${{ env.SERVICE_NAME }}.yml
-          
+          cp -r deployment-template ${{ env.SERVICE_NAME }}
+          sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" ${{ env.SERVICE_NAME }}/deployment.yaml
+          sed -i "s#image:.*#image: adeekur861/${{ env.SERVICE_NAME }}:${GITHUB_REF#refs/*/}#g" ${{ env.SERVICE_NAME }}/deployment.yaml
+          sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" service.yaml
+          cp argocd-application/template.yml argocd-application/${{ env.SERVICE_NAME }}.yaml
+          sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" argocd-application/${{ env.SERVICE_NAME }}.yaml
+          sed -i "s/{{NAMESPACES}}/${{ needs.define.outputs.Namespace }}/g" argocd-application/${{ env.SERVICE_NAME }}.yaml
+          sed -i "s/{{BRANCH}}/dev/g" argocd-application/${{ env.SERVICE_NAME }}.yaml
+          kubectl apply -f argocd-application/${{ env.SERVICE_NAME }}.yaml
       
       - name: Update current deployment
         if: env.DEPLOYMENT == 1
