@@ -147,7 +147,6 @@ jobs:
       # - name: deploy to cluster
       #   if: ((env.DEPLOYMENT == 0))
       #   run: | 
-      #     git clone https://adekurniawann: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@github.com/jadiinonline/argocd-manifest.git
       #     cd argocd-manifest
       #     git checkout dev
       #     cd argocd-application
@@ -171,7 +170,7 @@ jobs:
           git checkout dev
           ls -la
           pwd
-          sed -i "s/{{TAG_RELEASE}}/${GITHUB_REF#refs/*/}/g" ${{ env.SERVICE_NAME }}/deployment.yaml
+          sed -i "s#image:.*#image: adeekur861/${{ env.SERVICE_NAME }}:${GITHUB_REF#refs/*/}/g" ${{ env.SERVICE_NAME }}/deployment.yaml
           ls -la
           cat nodejs-web-prototype/deployment.yaml
           git add -A
