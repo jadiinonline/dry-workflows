@@ -158,6 +158,9 @@ jobs:
           sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" argocd-application/${{ env.SERVICE_NAME }}.yaml
           sed -i "s/{{NAMESPACES}}/${{ needs.define.outputs.Namespace }}/g" argocd-application/${{ env.SERVICE_NAME }}.yaml
           sed -i "s/{{BRANCH}}/dev/g" argocd-application/${{ env.SERVICE_NAME }}.yaml
+          git add -A
+          git commit -m "create deployment and argocd manifest for ${{ env.SERVICE_NAME }}"
+          git push origin ${{ needs.define.outputs.nodeEnv }}
           kubectl apply -f argocd-application/${{ env.SERVICE_NAME }}.yaml
       
       - name: Update current deployment
@@ -167,13 +170,11 @@ jobs:
           git config --global user.name "adeekur861@gmail.com"
           git checkout ${{ needs.define.outputs.nodeEnv }}
           ls -la
-          pwd
           sed -i "s#image:.*#image: adeekur861/${{ env.SERVICE_NAME }}:${GITHUB_REF#refs/*/}#g" ${{ env.SERVICE_NAME }}/deployment.yaml
-          ls -la
           cat nodejs-web-prototype/deployment.yaml
           git add -A
           git commit -m "update image tag ${{ steps.meta.outputs.tags }}"
-          git push origin dev
+          git push origin ${{ needs.define.outputs.nodeEnv }}
           
       - name: Restore kubectl Context To Default
         if: always()
