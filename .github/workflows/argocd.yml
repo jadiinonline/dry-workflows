@@ -144,22 +144,22 @@ jobs:
           ref: "dev"
           token: ${{ secrets.pat_token }}
           
-      # - name: deploy to cluster
-      #   if: ((env.DEPLOYMENT == 0))
-      #   run: | 
-      #     cd argocd-manifest
-      #     git checkout dev
-      #     cd argocd-application
-      #     cp template.yml ${{ env.SERVICE_NAME }}.yml
-      #     sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" ${{ env.SERVICE_NAME }}.yml
-      #     sed -i "s/{{NAMESPACES}}/${{ needs.define.outputs.Namespace }}/g" ${{ env.SERVICE_NAME }}.yml
-      #     sed -i "s/{{BRANCH}}/dev/g" ${{ env.SERVICE_NAME }}.yml
-      #     cp -r ../deployment-template ../${{ env.SERVICE_NAME }}
-      #     cd ../${{ env.SERVICE_NAME }}
-      #     sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" deployment.yml
-      #     sed -i "s/{{TAG_RELEASE}}/${{ steps.meta.outputs.tags }}"/g" deployment.yml
-      #     sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" service.yml
-      #     kubectl apply -f ../argocd-application/${{ env.SERVICE_NAME }}.yml
+      - name: deploy to cluster
+        if: ((env.DEPLOYMENT == 0))
+        run: |
+          git config --global user.email "adekurniawann"
+          git config --global user.name "adeekur861@gmail.com" 
+          git checkout $GITHUB_BASE_REF
+          cp template.yml ${{ env.SERVICE_NAME }}.yml
+          sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" ${{ env.SERVICE_NAME }}.yml
+          sed -i "s/{{NAMESPACES}}/${{ needs.define.outputs.Namespace }}/g" ${{ env.SERVICE_NAME }}.yml
+          sed -i "s/{{BRANCH}}/dev/g" ${{ env.SERVICE_NAME }}.yml
+          cp -r ../deployment-template ../${{ env.SERVICE_NAME }}
+          cd ../${{ env.SERVICE_NAME }}
+          sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" deployment.yml
+          sed -i "s/{{TAG_RELEASE}}/${{ steps.meta.outputs.tags }}"/g" deployment.yml
+          sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" service.yml
+          kubectl apply -f ../argocd-application/${{ env.SERVICE_NAME }}.yml
           
       
       - name: Update current deployment
@@ -167,7 +167,7 @@ jobs:
         run: |
           git config --global user.email "adekurniawann"
           git config --global user.name "adeekur861@gmail.com"
-          git checkout dev
+          git checkout $GITHUB_BASE_REF
           ls -la
           pwd
           sed -i "s#image:.*#image: adeekur861/${{ env.SERVICE_NAME }}:${GITHUB_REF#refs/*/}#g" ${{ env.SERVICE_NAME }}/deployment.yaml
