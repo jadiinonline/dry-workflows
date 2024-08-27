@@ -172,7 +172,6 @@ jobs:
           git checkout ${{ needs.define.outputs.nodeEnv }}
           ls -la
           sed -i "s#image:.*#image: adeekur861/${{ env.SERVICE_NAME }}:${GITHUB_REF#refs/*/}#g" ${{ env.SERVICE_NAME }}/deployment.yaml
-          cat nodejs-web-prototype/deployment.yaml
           git add -A
           git commit -m "update image tag ${{ steps.meta.outputs.tags }}"
           git push origin ${{ needs.define.outputs.nodeEnv }}
