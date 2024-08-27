@@ -151,11 +151,10 @@ jobs:
           git config --global user.name "adeekur861@gmail.com" 
           git checkout ${{ needs.define.outputs.nodeEnv }}
           helm create ${{ env.SERVICE_NAME }}
+          rm ${{ env.SERVICE_NAME }}/values.yaml
           cp deployment-template/values.yaml ${{ env.SERVICE_NAME }}/values.yaml
-          sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" ${{ env.SERVICE_NAME }}/deployment.yaml
-          sed -i "s#image:.*#image: adeekur861/${{ env.SERVICE_NAME }}:${GITHUB_REF#refs/*/}#g" ${{ env.SERVICE_NAME }}/deployment.yaml
-          sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" ${{ env.SERVICE_NAME }}/service.yaml
-          sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" ${{ env.SERVICE_NAME }}/hpa.yaml
+          sed -i "s#repository:.*#repository: adeekur861/${{ env.SERVICE_NAME }}:${GITHUB_REF#refs/*/}#g" ${{ env.SERVICE_NAME }}/values.yaml
+          sed -i "s#tag:.*#tag: ${GITHUB_REF#refs/*/}#g" ${{ env.SERVICE_NAME }}/values.yaml
           cp argocd-application/template.yaml argocd-application/${{ env.SERVICE_NAME }}.yaml
           sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" argocd-application/${{ env.SERVICE_NAME }}.yaml
           sed -i "s/{{NAMESPACES}}/${{ needs.define.outputs.Namespace }}/g" argocd-application/${{ env.SERVICE_NAME }}.yaml
@@ -172,8 +171,7 @@ jobs:
           git config --global user.name "adeekur861@gmail.com"
           git checkout ${{ needs.define.outputs.nodeEnv }}
           ls -la
-          sed -i "s#image:.*#image: adeekur861/${{ env.SERVICE_NAME }}:${GITHUB_REF#refs/*/}#g" ${{ env.SERVICE_NAME }}/deployment.yaml
-          cat nodejs-web-prototype/deployment.yaml
+          sed -i "s#tag:.*#tag: ${GITHUB_REF#refs/*/}#g" ${{ env.SERVICE_NAME }}/values.yaml
           git add -A
           git commit -m "update image tag ${{ steps.meta.outputs.tags }}"
           git push origin ${{ needs.define.outputs.nodeEnv }}
