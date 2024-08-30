@@ -149,10 +149,10 @@ jobs:
         run: |
           git config --global user.email "adekurniawann"
           git config --global user.name "adeekur861@gmail.com" 
-          git checkout ${{ needs.define.outputs.nodeEnv }}
+          git checkout ${{ needs.define.outputs.nodeEnv }}-helm
           helm create ${{ env.SERVICE_NAME }}
           rm ${{ env.SERVICE_NAME }}/values.yaml
-          cp deployment-template/values.yaml ${{ env.SERVICE_NAME }}/values.yaml
+          cp values-template/values.yaml ${{ env.SERVICE_NAME }}/values.yaml
           sed -i "s#repository:.*#repository: adeekur861/${{ env.SERVICE_NAME }}:${GITHUB_REF#refs/*/}#g" ${{ env.SERVICE_NAME }}/values.yaml
           sed -i "s#tag:.*#tag: ${GITHUB_REF#refs/*/}#g" ${{ env.SERVICE_NAME }}/values.yaml
           cp argocd-application/template.yaml argocd-application/${{ env.SERVICE_NAME }}.yaml
@@ -161,7 +161,7 @@ jobs:
           sed -i "s/{{BRANCH}}/${{ needs.define.outputs.nodeEnv }}/g" argocd-application/${{ env.SERVICE_NAME }}.yaml
           git add -A
           git commit -m "create deployment and argocd manifest for ${{ env.SERVICE_NAME }}"
-          git push origin ${{ needs.define.outputs.nodeEnv }}
+          git push origin ${{ needs.define.outputs.nodeEnv }}-helm
           kubectl apply -f argocd-application/${{ env.SERVICE_NAME }}.yaml
       
       - name: Update current deployment
@@ -169,12 +169,12 @@ jobs:
         run: |
           git config --global user.email "adekurniawann"
           git config --global user.name "adeekur861@gmail.com"
-          git checkout ${{ needs.define.outputs.nodeEnv }}
+          git checkout ${{ needs.define.outputs.nodeEnv }}-helm
           ls -la
           sed -i "s#tag:.*#tag: ${GITHUB_REF#refs/*/}#g" ${{ env.SERVICE_NAME }}/values.yaml
           git add -A
           git commit -m "update image tag ${{ steps.meta.outputs.tags }}"
-          git push origin ${{ needs.define.outputs.nodeEnv }}
+          git push origin ${{ needs.define.outputs.nodeEnv }}-helm
           
       - name: Restore kubectl Context To Default
         if: always()
