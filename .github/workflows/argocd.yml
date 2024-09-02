@@ -153,7 +153,7 @@ jobs:
           helm create ${{ env.SERVICE_NAME }}
           rm ${{ env.SERVICE_NAME }}/values.yaml
           cp values-template/values.yaml ${{ env.SERVICE_NAME }}/values.yaml
-          sed -i "s#repository:.*#repository: adeekur861/${{ env.SERVICE_NAME }}#g" ${{ env.SERVICE_NAME }}/values.yaml
+          sed -i "s#repository:.*#repository: registry-intl.ap-southeast-5.aliyuncs.com/jadwalin/${{ env.SERVICE_NAME }}#g" ${{ env.SERVICE_NAME }}/values.yaml
           sed -i "s#tag:.*#tag: ${GITHUB_REF#refs/*/}#g" ${{ env.SERVICE_NAME }}/values.yaml
           cp argocd-application/template.yaml argocd-application/${{ env.SERVICE_NAME }}.yaml
           sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" argocd-application/${{ env.SERVICE_NAME }}.yaml
