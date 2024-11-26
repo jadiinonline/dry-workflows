@@ -118,7 +118,7 @@ jobs:
       - name: Notice Meta
         run: echo "::notice title=meta tag created::${{ steps.meta.outputs.tags }}"
 
-  swarm-deploy:
+  argocd-deployment:
     needs: [metadata, define]
     runs-on: [self-hosted]
 
