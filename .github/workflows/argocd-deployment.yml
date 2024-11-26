@@ -158,7 +158,6 @@ jobs:
           cp argocd-application/template.yaml argocd-application/${{ env.SERVICE_NAME }}.yaml
           sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" argocd-application/${{ env.SERVICE_NAME }}.yaml
           sed -i "s/{{NAMESPACES}}/${{ needs.define.outputs.Namespace }}/g" argocd-application/${{ env.SERVICE_NAME }}.yaml
-          sed -i "s/{{BRANCH}}/${{ needs.define.outputs.nodeEnv }}/g" argocd-application/${{ env.SERVICE_NAME }}.yaml
           git add -A
           git commit -m "create deployment and argocd manifest for ${{ env.SERVICE_NAME }}"
           git push origin helm-chart
