@@ -118,7 +118,7 @@ jobs:
       - name: Notice Meta
         run: echo "::notice title=meta tag created::${{ steps.meta.outputs.tags }}"
 
-  argocd-deployment:
+  argocd-deploy:
     needs: [metadata, define]
     runs-on: [self-hosted]
 
@@ -149,7 +149,7 @@ jobs:
         run: |
           git config --global user.email "adekurniawann"
           git config --global user.name "adeekur861@gmail.com" 
-          git checkout helm-chart
+          git checkout ${{ needs.define.outputs.nodeEnv }}-helm
           helm create ${{ env.SERVICE_NAME }}
           rm ${{ env.SERVICE_NAME }}/values.yaml
           cp values-template/values.yaml ${{ env.SERVICE_NAME }}/values.yaml
@@ -158,9 +158,10 @@ jobs:
           cp argocd-application/template.yaml argocd-application/${{ env.SERVICE_NAME }}.yaml
           sed -i "s/{{SERVICE_NAME}}/${{ env.SERVICE_NAME }}/g" argocd-application/${{ env.SERVICE_NAME }}.yaml
           sed -i "s/{{NAMESPACES}}/${{ needs.define.outputs.Namespace }}/g" argocd-application/${{ env.SERVICE_NAME }}.yaml
+          sed -i "s/{{BRANCH}}/${{ needs.define.outputs.nodeEnv }}/g" argocd-application/${{ env.SERVICE_NAME }}.yaml
           git add -A
           git commit -m "create deployment and argocd manifest for ${{ env.SERVICE_NAME }}"
-          git push origin helm-chart
+          git push origin ${{ needs.define.outputs.nodeEnv }}-helm
           kubectl apply -f argocd-application/${{ env.SERVICE_NAME }}.yaml
       
       - name: Update current deployment
@@ -168,12 +169,12 @@ jobs:
         run: |
           git config --global user.email "adekurniawann"
           git config --global user.name "adeekur861@gmail.com"
-          git checkout helm-chart
+          git checkout ${{ needs.define.outputs.nodeEnv }}-helm
           ls -la
           sed -i "s#tag:.*#tag: ${GITHUB_REF#refs/*/}#g" ${{ env.SERVICE_NAME }}/values.yaml
           git add -A
           git commit -m "update image tag ${{ steps.meta.outputs.tags }}"
-          git push origin helm-chart
+          git push origin ${{ needs.define.outputs.nodeEnv }}-helm
           
       - name: Restore kubectl Context To Default
         if: always()
