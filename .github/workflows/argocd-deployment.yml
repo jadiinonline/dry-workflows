@@ -161,7 +161,7 @@ jobs:
           sed -i "s/{{BRANCH}}/${{ needs.define.outputs.nodeEnv }}/g" argocd-application/${{ env.SERVICE_NAME }}.yaml
           git add -A
           git commit -m "create deployment and argocd manifest for ${{ env.SERVICE_NAME }}"
-          git push origin ${{ needs.define.outputs.nodeEnv }}-helm
+          git push origin helm-chart
           kubectl apply -f argocd-application/${{ env.SERVICE_NAME }}.yaml
       
       - name: Update current deployment
@@ -174,7 +174,7 @@ jobs:
           sed -i "s#tag:.*#tag: ${GITHUB_REF#refs/*/}#g" ${{ env.SERVICE_NAME }}/values.yaml
           git add -A
           git commit -m "update image tag ${{ steps.meta.outputs.tags }}"
-          git push origin ${{ needs.define.outputs.nodeEnv }}-helm
+          git push origin helm-chart
           
       - name: Restore kubectl Context To Default
         if: always()
