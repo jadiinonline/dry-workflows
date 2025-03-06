@@ -175,6 +175,7 @@ jobs:
           git add -A
           git commit -m "update image tag ${{ steps.meta.outputs.tags }}"
           git push origin ${{ needs.define.outputs.nodeEnv }}-helm
+          git fetch origin
           git checkout staging-helm
           ls -la
           sed -i "s#tag:.*#tag: ${GITHUB_REF#refs/*/}#g" ${{ env.SERVICE_NAME }}/values.yaml
