@@ -172,6 +172,7 @@ jobs:
           git config --global user.name "adeekur861@gmail.com"
           git checkout ${{ needs.define.outputs.nodeEnv }}
           ls -la
+          helm version
           sed -i "s#image:.*#image: adeekur861/${{ env.SERVICE_NAME }}:${GITHUB_REF#refs/*/}#g" ${{ env.SERVICE_NAME }}/deployment.yaml
           git add -A
           git commit -m "update image tag ${{ env.SERVICE_NAME }}:${GITHUB_REF#refs/*/}"
